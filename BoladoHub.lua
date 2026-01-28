@@ -55,7 +55,7 @@ function BoladoHub.new(options)
     -- Configurações
     self.Config = {
         Name = options.Name or "BoladoHub",
-        Size = options.Size or UDim2.new(0, 550, 0, 450),
+        Size = options.Size or UDim2.new(0, 450, 0, 300),
         Theme = options.Theme or "Dark",
         ShowMinimize = options.ShowMinimize ~= false,
         ShowClose = options.ShowClose ~= false,
