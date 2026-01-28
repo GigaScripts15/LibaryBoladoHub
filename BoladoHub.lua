@@ -8,7 +8,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 -- Importar módulos (em produção, use require)
-local Icons = loadstring(game:HttpGet("URL_DOS_ICONES"))() or {
+local Icons = loadstring(game:HttpGet("https://raw.githubusercontent.com/GigaScripts15/LibaryBoladoHub/refs/heads/main/incon.lua"))() or {
     Get = function(name) return "rbxassetid://10709721749" end
 }
 
