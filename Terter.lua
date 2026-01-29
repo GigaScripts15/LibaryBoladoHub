@@ -1,436 +1,140 @@
--- BoladoHub Example - Exemplo de uso da biblioteca
--- Drag, Touch e Minimizar funcionais
+-- BoladoHub Library v3.0
+-- Biblioteca completa com Drag, Touch e Minimizar
 
--- Carregar a biblioteca
-local BoladoHub = loadstring(game:HttpGet("URL_DA_BIBLIOTECA"))()
+local BoladoHub = {}
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
--- Criar interface com todos os recursos
-local hub = BoladoHub.new({
-    Name = "BoladoHub Pro",
-    Size = UDim2.new(0, 500, 0, 450),
-    Theme = "Midnight", -- Escolha o tema: Midnight, Cyberpunk, Forest, Lava, CottonCandy
-    ShowMinimize = true, -- Ativar botão minimizar
-    Draggable = true,    -- Ativar drag com mouse
-    TouchEnabled = true, -- Ativar suporte a touch
-    AnimationSpeed = 0.3 -- Velocidade das animações
-})
+-- ==================== SISTEMA DE ÍCONES ====================
+local Icons = {
+    ["settings"] = "rbxassetid://10734950309",
+    ["code"] = "rbxassetid://10709810463",
+    ["shield"] = "rbxassetid://10734951847",
+    ["gamepad"] = "rbxassetid://10723395457",
+    ["eye"] = "rbxassetid://10723346959",
+    ["star"] = "rbxassetid://10734966248",
+    ["bolt"] = "rbxassetid://10709721749",
+    ["wand"] = "rbxassetid://10747376565",
+    ["crown"] = "rbxassetid://10709818626",
+    ["user"] = "rbxassetid://10747373176",
+    ["paintbrush"] = "rbxassetid://10734910187",
+    ["palette"] = "rbxassetid://10734910430",
+    ["image"] = "rbxassetid://10723415040",
+    ["sliders"] = "rbxassetid://10734963400",
+    ["bell"] = "rbxassetid://10709775704",
+    ["checkcircle"] = "rbxassetid://10709790387",
+    ["xcircle"] = "rbxassetid://10747383819",
+    ["alertcircle"] = "rbxassetid://10709752996",
+    ["info"] = "rbxassetid://10723415903",
+    ["helpcircle"] = "rbxassetid://10723406988",
+    ["folder"] = "rbxassetid://10723387563",
+    ["search"] = "rbxassetid://10734943674",
+    ["download"] = "rbxassetid://10723344270",
+    ["upload"] = "rbxassetid://10747366434",
+    ["copy"] = "rbxassetid://10709812159",
+    ["trash"] = "rbxassetid://10747362393",
+    ["play"] = "rbxassetid://10734923549",
+    ["stopcircle"] = "rbxassetid://10734972621",
+    ["refreshcw"] = "rbxassetid://10734933222",
+    ["lock"] = "rbxassetid://10723434711",
+    ["sword"] = "rbxassetid://10734975486",
+    ["music"] = "rbxassetid://10734905958",
+    ["zap"] = "rbxassetid://10709721749",
+    ["cog"] = "rbxassetid://10709810948",
+    ["key"] = "rbxassetid://10723416652",
+    ["wifi"] = "rbxassetid://10747382504",
+    ["cpu"] = "rbxassetid://10709813383",
+    ["battery"] = "rbxassetid://10709774640",
+    ["home"] = "rbxassetid://10723407389",
+    ["flag"] = "rbxassetid://10723375890",
+    ["chevron-down"] = "rbxassetid://10734904599",
+    ["chevron-up"] = "rbxassetid://10734904599"
+}
 
-print("🎮 BoladoHub v3.0 Carregado!")
-print("🎯 Recursos Ativos:")
-print("   ✅ Drag & Drop (Mouse)")
-print("   ✅ Touch Support")
-print("   ✅ Botão Minimizar")
-print("   ✅ 5 Temas Disponíveis")
-print("   ✅ Hotkeys: Insert, Delete, RightShift")
-print("========================================")
-
--- ==================== CRIAR ABAS SEPARADAS ====================
-print("📁 Criando abas...")
-
--- Adicionar aba Config
-local configTab = hub:AddTab("Config", "settings")
-
--- Adicionar aba Principal
-local mainTab = hub:AddTab("Principal", "home")
-
--- Adicionar aba Visuals
-local visualsTab = hub:AddTab("Visuals", "eye")
-
--- ==================== CONTEÚDO DA ABA CONFIG ====================
-print("🔧 Configurando aba Config...")
-hub:SelectTab("Config")
-
--- Botões da aba Config
-hub:Button({
-    Text = "Salvar Configurações",
-    Icon = "checkcircle",
-    Callback = function()
-        print("✅ Configurações salvas!")
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "BoladoHub",
-            Text = "Configurações salvas com sucesso!",
-            Duration = 3
-        })
-    end
-})
-
-hub:Button({
-    Text = "Resetar Tudo",
-    Icon = "refreshcw",
-    Callback = function()
-        print("🔄 Configuração resetada!")
-    end
-})
-
-hub:Button({
-    Text = "Exportar Config",
-    Icon = "download",
-    Callback = function()
-        print("📤 Configuração exportada!")
-    end
-})
-
--- Toggle da aba Config
-hub:Toggle({
-    Text = "Modo Noturno",
-    Icon = "moon",
-    Default = true,
-    Callback = function(state)
-        print("🌙 Modo Noturno:", state and "ATIVADO" or "DESATIVADO")
-    end
-})
-
-hub:Toggle({
-    Text = "Auto-Save",
-    Icon = "save",
-    Default = false,
-    Callback = function(state)
-        print("💾 Auto-Save:", state and "ATIVADO" or "DESATIVADO")
-    end
-})
-
--- Slider da aba Config
-hub:Slider({
-    Text = "Volume",
-    Icon = "volume",
-    Min = 0,
-    Max = 100,
-    Default = 70,
-    Suffix = "%",
-    Callback = function(value)
-        print("🔊 Volume ajustado para:", value .. "%")
-    end
-})
-
--- ==================== CONTEÚDO DA ABA PRINCIPAL ====================
-print("🏠 Configurando aba Principal...")
-hub:SelectTab("Principal")
-
--- Botões da aba Principal
-hub:Button({
-    Text = "Ativar Fly",
-    Icon = "bolt",
-    Callback = function()
-        print("✈️ Fly ativado!")
-        -- Exemplo: Ativar fly hack
-        local player = game.Players.LocalPlayer
-        if player.Character then
-            player.Character.Humanoid.WalkSpeed = 50
-            print("   Speed aumentado para 50!")
-        end
-    end
-})
-
-hub:Button({
-    Text = "God Mode",
-    Icon = "shield",
-    Callback = function()
-        print("🛡️ God Mode ativado!")
-    end
-})
-
-hub:Button({
-    Text = "Speed Hack",
-    Icon = "zap",
-    Callback = function()
-        print("⚡ Speed Hack ativado!")
-    end
-})
-
-hub:Button({
-    Text = "Noclip",
-    Icon = "user",
-    Callback = function()
-        print("👻 Noclip ativado!")
-    end
-})
-
--- Toggles da aba Principal
-local espToggle = hub:Toggle({
-    Text = "ESP Players",
-    Icon = "eye",
-    Default = true,
-    Callback = function(state)
-        print("👁️ ESP Players:", state and "ATIVADO" or "DESATIVADO")
-    end
-})
-
-local aimbotToggle = hub:Toggle({
-    Text = "Aimbot",
-    Icon = "target",
-    Default = false,
-    Callback = function(state)
-        print("🎯 Aimbot:", state and "ATIVADO" or "DESATIVADO")
-    end
-})
-
--- Slider da aba Principal
-hub:Slider({
-    Text = "Field of View",
-    Icon = "eye",
-    Min = 50,
-    Max = 120,
-    Default = 70,
-    Suffix = "°",
-    Callback = function(value)
-        print("👁️ FOV ajustado para:", value .. "°")
-    end
-})
-
--- ==================== CONTEÚDO DA ABA VISUALS ====================
-print("🎨 Configurando aba Visuals...")
-hub:SelectTab("Visuals")
-
--- Botões da aba Visuals
-hub:Button({
-    Text = "Wallhack",
-    Icon = "eye",
-    Callback = function()
-        print("🧱 Wallhack ativado!")
-    end
-})
-
-hub:Button({
-    Text = "Full Bright",
-    Icon = "sun",
-    Callback = function()
-        print("☀️ Full Bright ativado!")
-        -- Exemplo: Aumentar brilho
-        game:GetService("Lighting").Brightness = 2
-        game:GetService("Lighting").GlobalShadows = false
-    end
-})
-
-hub:Button({
-    Text = "Chams",
-    Icon = "paintbrush",
-    Callback = function()
-        print("🎨 Chams ativado!")
-    end
-})
-
-hub:Button({
-    Text = "Rainbow GUI",
-    Icon = "palette",
-    Callback = function()
-        print("🌈 Rainbow GUI ativado!")
-        -- Exemplo: Mudar tema dinamicamente
-        local themes = {"Midnight", "Cyberpunk", "Forest", "Lava", "CottonCandy"}
-        local currentIndex = 1
-        local function cycleTheme()
-            hub:SetTheme(themes[currentIndex])
-            currentIndex = currentIndex % #themes + 1
-        end
-        cycleTheme()
-    end
-})
-
--- Toggles da aba Visuals
-hub:Toggle({
-    Text = "Show FPS",
-    Icon = "cpu",
-    Default = true,
-    Callback = function(state)
-        print("📊 FPS Counter:", state and "VISÍVEL" or "OCULTO")
-    end
-})
-
-hub:Toggle({
-    Text = "Show Coordinates",
-    Icon = "map",
-    Default = false,
-    Callback = function(state)
-        print("📍 Coordinates:", state and "VISÍVEIS" or "OCULTAS")
-    end
-})
-
--- Slider da aba Visuals
-hub:Slider({
-    Text = "Brightness",
-    Icon = "sun",
-    Min = 0,
-    Max = 5,
-    Default = 1,
-    Decimal = 1,
-    Callback = function(value)
-        print("💡 Brilho ajustado para:", value)
-        game:GetService("Lighting").Brightness = value
-    end
-})
-
--- ==================== SISTEMA DE TEMAS DINÂMICO ====================
-print("🎨 Configurando sistema de temas...")
-
--- Label informativa
-hub:Label({
-    Text = "Trocar Tema:",
-    Size = 16,
-    Bold = true
-})
-
--- Botões para mudar tema
-hub:Button({
-    Text = "Tema Cyberpunk",
-    Icon = "palette",
-    Callback = function()
-        hub:SetTheme("Cyberpunk")
-        print("🎮 Tema alterado para: Cyberpunk")
-    end
-})
-
-hub:Button({
-    Text = "Tema Forest",
-    Icon = "tree",
-    Callback = function()
-        hub:SetTheme("Forest")
-        print("🎮 Tema alterado para: Forest")
-    end
-})
-
-hub:Button({
-    Text = "Tema Lava",
-    Icon = "fire",
-    Callback = function()
-        hub:SetTheme("Lava")
-        print("🎮 Tema alterado para: Lava")
-    end
-})
-
--- ==================== DEMONSTRAÇÃO DE DRAG & TOUCH ====================
-print("👆 Demonstrando Drag & Touch...")
-
-hub:Label({
-    Text = "Demonstração:",
-    Size = 16,
-    Bold = true
-})
-
-hub:Label({
-    Text = "• Arraste a barra de título para mover\n• Toque nos botões (dispositivos móveis)\n• Use os botões de controle abaixo",
-    Size = 12
-})
-
--- Botões de controle
-hub:Button({
-    Text = "Mostrar/Esconder (Insert)",
-    Icon = "eye",
-    Callback = function()
-        hub:Hide()
-        task.wait(1)
-        hub:Show()
-        print("👁️ Interface escondida e mostrada!")
-    end
-})
-
-hub:Button({
-    Text = "Minimizar (RightShift)",
-    Icon = "chevron-down",
-    Callback = function()
-        hub:ToggleMinimize()
-        print(hub.Minimized and "📥 Interface minimizada!" or "📤 Interface restaurada!")
-    end
-})
-
-hub:Button({
-    Text = "Testar Touch Simulado",
-    Icon = "hand",
-    Callback = function()
-        print("👉 Touch simulado: Todos os botões respondem a toque!")
-        print("   (Em dispositivos móveis, toque funciona normalmente)")
-    end
-})
-
--- ==================== SISTEMA DE LOGS ====================
-print("📝 Inicializando sistema de logs...")
-
--- Criar aba de Logs
-local logsTab = hub:AddTab("Logs", "info")
-hub:SelectTab("Logs")
-
--- Label de logs
-hub:Label({
-    Text = "📊 SISTEMA DE LOGS",
-    Size = 18,
-    Bold = true,
-    Align = Enum.TextXAlignment.Center
-})
-
-hub:Label({
-    Text = "Aqui aparecem todas as ações realizadas:",
-    Size = 14,
-    Align = Enum.TextXAlignment.Center
-})
-
--- Função para adicionar log
-local function addLog(message)
-    hub:Label({
-        Text = "[" .. os.date("%H:%M:%S") .. "] " .. message,
-        Size = 12,
-        Color = Color3.fromRGB(200, 200, 200)
-    })
+local function GetIcon(name)
+    return Icons[name] or Icons["bolt"]
 end
 
--- Botão para limpar logs
-hub:Button({
-    Text = "Limpar Logs",
-    Icon = "trash",
-    Callback = function()
-        hub:ClearContent()
-        addLog("Logs limpos!")
-    end
-})
+-- ==================== SISTEMA DE TEMAS ====================
+local Themes = {
+    Midnight = {
+        Background = Color3.fromRGB(20, 25, 45),
+        TabBackground = Color3.fromRGB(30, 35, 55),
+        TabActive = Color3.fromRGB(100, 150, 255),
+        Button = Color3.fromRGB(40, 45, 65),
+        ButtonHover = Color3.fromRGB(120, 170, 255),
+        Text = Color3.fromRGB(220, 230, 255),
+        TextSecondary = Color3.fromRGB(160, 170, 200),
+        Border = Color3.fromRGB(50, 60, 90)
+    },
+    
+    Cyberpunk = {
+        Background = Color3.fromRGB(25, 10, 45),
+        TabBackground = Color3.fromRGB(35, 20, 55),
+        TabActive = Color3.fromRGB(255, 0, 200),
+        Button = Color3.fromRGB(45, 30, 65),
+        ButtonHover = Color3.fromRGB(255, 50, 220),
+        Text = Color3.fromRGB(255, 200, 255),
+        TextSecondary = Color3.fromRGB(200, 150, 200),
+        Border = Color3.fromRGB(70, 30, 90)
+    },
+    
+    Forest = {
+        Background = Color3.fromRGB(25, 45, 30),
+        TabBackground = Color3.fromRGB(35, 55, 40),
+        TabActive = Color3.fromRGB(0, 200, 100),
+        Button = Color3.fromRGB(45, 65, 50),
+        ButtonHover = Color3.fromRGB(50, 220, 120),
+        Text = Color3.fromRGB(220, 255, 230),
+        TextSecondary = Color3.fromRGB(170, 200, 180),
+        Border = Color3.fromRGB(60, 80, 70)
+    },
+    
+    Lava = {
+        Background = Color3.fromRGB(50, 20, 15),
+        TabBackground = Color3.fromRGB(60, 30, 25),
+        TabActive = Color3.fromRGB(255, 100, 0),
+        Button = Color3.fromRGB(70, 40, 35),
+        ButtonHover = Color3.fromRGB(255, 130, 50),
+        Text = Color3.fromRGB(255, 230, 220),
+        TextSecondary = Color3.fromRGB(200, 170, 160),
+        Border = Color3.fromRGB(90, 50, 45)
+    },
+    
+    CottonCandy = {
+        Background = Color3.fromRGB(240, 190, 240),
+        TabBackground = Color3.fromRGB(250, 200, 250),
+        TabActive = Color3.fromRGB(255, 100, 200),
+        Button = Color3.fromRGB(255, 210, 255),
+        ButtonHover = Color3.fromRGB(255, 130, 220),
+        Text = Color3.fromRGB(80, 60, 100),
+        TextSecondary = Color3.fromRGB(120, 100, 140),
+        Border = Color3.fromRGB(220, 170, 220)
+    }
+}
 
--- Voltar para aba Principal
-hub:SelectTab("Principal")
+-- ==================== CLASSE PRINCIPAL ====================
+BoladoHub.__index = BoladoHub
 
--- Adicionar logs iniciais
-addLog("BoladoHub inicializado com sucesso!")
-addLog("Drag & Touch ativados")
-addLog("Sistema de temas carregado")
-addLog("3 abas criadas: Config, Principal, Visuals")
-
--- ==================== HOTKEYS & CONTROLES ====================
-print("⌨️ Configurando hotkeys...")
-
--- Instruções
-hub:Label({
-    Text = "🎮 CONTROLES RÁPIDOS:",
-    Size = 16,
-    Bold = true
-})
-
-hub:Label({
-    Text = "• INSERT: Mostrar/Esconder\n• DELETE: Fechar interface\n• RIGHTSHIFT: Minimizar/Restaurar\n• Arraste a barra de título para mover",
-    Size = 12
-})
-
-print("========================================")
-print("✅ BoladoHub configurado com sucesso!")
-print("========================================")
-print("🎯 Use INSERT para mostrar/esconder")
-print("🎯 Arraste a barra de título para mover")
-print("🎯 Clique em RightShift para minimizar")
-print("🎯 Toque funciona em dispositivos móveis")
-print("========================================")
-
--- Notificação inicial
-task.spawn(function()
-    wait(1)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "BoladoHub Pro",
-        Text = "Interface carregada com sucesso!\nArraste para mover • Toque para interagir",
-        Duration = 5
-    })
-end)
-
--- Retornar a hub para uso externo
-return hub        Draggable = options.Draggable ~= false
+function BoladoHub.new(options)
+    local self = setmetatable({}, BoladoHub)
+    
+    -- Configurações
+    self.Config = {
+        Name = options.Name or "BoladoHub",
+        Size = options.Size or UDim2.new(0, 450, 0, 400),
+        Theme = options.Theme or "Midnight",
+        Position = options.Position or UDim2.new(0.5, -225, 0.5, -200),
+        ShowMinimize = options.ShowMinimize ~= false,
+        Draggable = options.Draggable ~= false,
+        TouchEnabled = options.TouchEnabled ~= false,
+        AnimationSpeed = options.AnimationSpeed or 0.3
     }
     
     self.Tabs = {}
     self.CurrentTab = nil
     self.Minimized = false
-    self.Components = {} -- Para armazenar componentes
+    self.Components = {}
     
     -- Inicializar
     self:Initialize()
@@ -452,6 +156,7 @@ function BoladoHub:CreateScreenGui()
     self.ScreenGui.Name = "BoladoHub_" .. self.Config.Name
     self.ScreenGui.Parent = game:GetService("CoreGui")
     self.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    self.ScreenGui.ResetOnSpawn = false
 end
 
 function BoladoHub:CreateMainFrame()
@@ -511,10 +216,8 @@ function BoladoHub:CreateTitleBar()
     -- Botões da barra
     self:CreateTitleButtons()
     
-    -- Sistema de arrasto
-    if self.Config.Draggable then
-        self:SetupDragSystem()
-    end
+    -- Sistema de arrasto (Drag & Touch)
+    self:SetupDragSystem()
 end
 
 function BoladoHub:CreateTitleButtons()
@@ -552,6 +255,13 @@ function BoladoHub:CreateTitleButtons()
         self.MinimizeBtn.MouseButton1Click:Connect(function()
             self:ToggleMinimize()
         end)
+        
+        -- Touch support
+        if self.Config.TouchEnabled then
+            self.MinimizeBtn.TouchTap:Connect(function()
+                self:ToggleMinimize()
+            end)
+        end
     end
     
     -- Botão fechar
@@ -575,26 +285,38 @@ function BoladoHub:CreateTitleButtons()
     self.CloseBtn.MouseButton1Click:Connect(function()
         self:Destroy()
     end)
+    
+    -- Touch support
+    if self.Config.TouchEnabled then
+        self.CloseBtn.TouchTap:Connect(function()
+            self:Destroy()
+        end)
+    end
 end
 
 function BoladoHub:SetupDragSystem()
     local dragging = false
     local dragStart, startPos
     
+    -- Função para iniciar arrasto (Mouse + Touch)
     local function startDrag(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if (input.UserInputType == Enum.UserInputType.MouseButton1) or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch) then
             dragging = true
             dragStart = input.Position
             startPos = self.MainFrame.Position
             
+            -- Feedback visual
             TweenService:Create(self.TitleBar, TweenInfo.new(0.1), {
                 BackgroundTransparency = 0.2
             }):Play()
         end
     end
     
+    -- Função para atualizar posição (Mouse + Touch)
     local function updateDrag(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch)) then
             local delta = input.Position - dragStart
             self.MainFrame.Position = UDim2.new(
                 startPos.X.Scale,
@@ -605,8 +327,10 @@ function BoladoHub:SetupDragSystem()
         end
     end
     
+    -- Função para parar arrasto (Mouse + Touch)
     local function endDrag(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if (input.UserInputType == Enum.UserInputType.MouseButton1) or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch) then
             dragging = false
             
             TweenService:Create(self.TitleBar, TweenInfo.new(0.1), {
@@ -615,9 +339,12 @@ function BoladoHub:SetupDragSystem()
         end
     end
     
+    -- Conectar eventos para TitleBar
     self.TitleBar.InputBegan:Connect(startDrag)
     self.TitleBar.InputChanged:Connect(updateDrag)
     self.TitleBar.InputEnded:Connect(endDrag)
+    
+    -- Conectar eventos para TitleLabel também
     self.TitleLabel.InputBegan:Connect(startDrag)
     self.TitleLabel.InputChanged:Connect(updateDrag)
     self.TitleLabel.InputEnded:Connect(endDrag)
@@ -640,8 +367,8 @@ function BoladoHub:CreateTabSystem()
     tabsLayout.Padding = UDim.new(0, 10)
     tabsLayout.Parent = self.TabsContainer
     
-    -- Frame de conteúdo (FIXO - SEM SCROLLINGFRAME)
-    self.ContentFrame = Instance.new("Frame")  -- Mudado para Frame regular
+    -- Frame de conteúdo
+    self.ContentFrame = Instance.new("Frame")
     self.ContentFrame.Name = "ContentFrame"
     self.ContentFrame.Size = UDim2.new(1, -20, 1, -110)
     self.ContentFrame.Position = UDim2.new(0, 10, 0, 100)
@@ -650,7 +377,7 @@ function BoladoHub:CreateTabSystem()
     self.ContentFrame.ClipsDescendants = true
     self.ContentFrame.Parent = self.MainFrame
     
-    -- Layout do conteúdo (agora dentro de um ScrollingFrame interno)
+    -- ScrollingFrame interno para conteúdo
     self.ContentScroll = Instance.new("ScrollingFrame")
     self.ContentScroll.Name = "ContentScroll"
     self.ContentScroll.Size = UDim2.new(1, 0, 1, 0)
@@ -661,6 +388,7 @@ function BoladoHub:CreateTabSystem()
     self.ContentScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
     self.ContentScroll.Parent = self.ContentFrame
     
+    -- Layout do conteúdo
     local contentLayout = Instance.new("UIListLayout")
     contentLayout.Padding = UDim.new(0, 12)
     contentLayout.Parent = self.ContentScroll
@@ -727,10 +455,17 @@ function BoladoHub:AddTab(name, icon)
     -- Efeitos hover
     self:AddHoverEffect(tabButton, 0, -0.1, theme.TabBackground, theme.TabActive)
     
-    -- Selecionar aba
+    -- Selecionar aba (Mouse)
     tabButton.MouseButton1Click:Connect(function()
         self:SelectTab(name)
     end)
+    
+    -- Selecionar aba (Touch)
+    if self.Config.TouchEnabled then
+        tabButton.TouchTap:Connect(function()
+            self:SelectTab(name)
+        end)
+    end
     
     -- Selecionar primeira aba
     if not self.CurrentTab then
@@ -784,89 +519,39 @@ function BoladoHub:SelectTab(name)
         
         self.CurrentTab = name
         
-        -- Criar conteúdo da aba
-        self:CreateTabContent(name)
+        -- Limpar conteúdo anterior
+        self:ClearContent()
     end
+    
+    return self.ContentScroll
 end
 
-function BoladoHub:CreateTabContent(tabName)
-    -- Limpar conteúdo anterior
+function BoladoHub:ClearContent()
     for _, child in ipairs(self.ContentScroll:GetChildren()) do
         if not child:IsA("UIListLayout") and not child:IsA("UIPadding") then
             child:Destroy()
         end
     end
-    
-    -- Criar conteúdo específico da aba
-    if tabName == "Config" then
-        self:AddButton("Salvar Configurações", "checkcircle", function()
-            print("Configurações salvas!")
-        end)
-        
-        self:AddButton("Resetar Config", "refreshcw", function()
-            print("Configuração resetada!")
-        end)
-        
-        self:AddButton("Exportar Config", "download", function()
-            print("Configuração exportada!")
-        end)
-        
-        self:AddToggle("Modo Noturno", false, function(state)
-            print("Modo Noturno:", state)
-        end)
-        
-    elseif tabName == "Principal" then
-        self:AddButton("Ativar Fly", "bolt", function()
-            print("Fly ativado!")
-        end)
-        
-        self:AddButton("God Mode", "shield", function()
-            print("God Mode ativado!")
-        end)
-        
-        self:AddButton("Speed Hack", "zap", function()
-            print("Speed aumentado!")
-        end)
-        
-        self:AddButton("Noclip", "user", function()
-            print("Noclip ativado!")
-        end)
-        
-        self:AddToggle("ESP Players", true, function(state)
-            print("ESP:", state)
-        end)
-        
-    elseif tabName == "Visuals" then
-        self:AddButton("Wallhack", "eye", function()
-            print("Wallhack ativado!")
-        end)
-        
-        self:AddButton("Full Bright", "sun", function()
-            print("Full Bright ativado!")
-        end)
-        
-        self:AddButton("Chams", "paintbrush", function()
-            print("Chams ativado!")
-        end)
-        
-        self:AddToggle("Rainbow Mode", false, function(state)
-            print("Rainbow Mode:", state)
-        end)
-    end
 end
 
--- ==================== COMPONENTES (CORRIGIDOS) ====================
+-- ==================== COMPONENTES ====================
 
-function BoladoHub:AddButton(text, icon, callback)
+function BoladoHub:Button(options)
+    local parent = options.Parent or self.ContentScroll
+    local text = options.Text or "Button"
+    local icon = options.Icon
+    local callback = options.Callback or function() end
+    local tooltip = options.Tooltip
+    
     local theme = self:GetTheme()
     
     local button = Instance.new("TextButton")
     button.Name = "Btn_" .. text
-    button.Size = UDim2.new(1, 0, 0, 48)  -- Tamanho fixo
+    button.Size = UDim2.new(1, 0, 0, 48)
     button.BackgroundColor3 = theme.Button
     button.AutoButtonColor = false
     button.Text = ""
-    button.Parent = self.ContentScroll  -- Agora vai direto no ContentScroll
+    button.Parent = parent
     
     -- Corner
     local corner = Instance.new("UICorner")
@@ -892,7 +577,7 @@ function BoladoHub:AddButton(text, icon, callback)
         iconLabel.Parent = button
     end
     
-    -- Texto (CORRIGIDO - usando operador ternário correto)
+    -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
     textLabel.Size = UDim2.new(1, icon and -55 or -30, 1, 0)
@@ -908,7 +593,7 @@ function BoladoHub:AddButton(text, icon, callback)
     -- Efeitos hover
     self:AddHoverEffect(button, 0, -0.1, theme.Button, theme.ButtonHover)
     
-    -- Clique
+    -- Clique (Mouse)
     button.MouseButton1Click:Connect(function()
         -- Animação de clique
         TweenService:Create(button, TweenInfo.new(0.1), {
@@ -926,25 +611,63 @@ function BoladoHub:AddButton(text, icon, callback)
         end
     end)
     
+    -- Clique (Touch)
+    if self.Config.TouchEnabled then
+        button.TouchTap:Connect(function()
+            if callback then
+                callback()
+            end
+        end)
+    end
+    
     -- Armazenar referência
     table.insert(self.Components, button)
-    return button
+    
+    return {
+        Instance = button,
+        SetText = function(newText)
+            textLabel.Text = newText
+        end,
+        SetEnabled = function(enabled)
+            button.Active = enabled
+            button.BackgroundTransparency = enabled and 0 or 0.5
+        end
+    }
 end
 
-function BoladoHub:AddToggle(text, default, callback)
+function BoladoHub:Toggle(options)
+    local parent = options.Parent or self.ContentScroll
+    local text = options.Text or "Toggle"
+    local icon = options.Icon
+    local default = options.Default or false
+    local callback = options.Callback or function() end
+    
     local theme = self:GetTheme()
     
     local toggleContainer = Instance.new("Frame")
     toggleContainer.Name = "Tgl_" .. text
     toggleContainer.Size = UDim2.new(1, 0, 0, 48)
     toggleContainer.BackgroundTransparency = 1
-    toggleContainer.Parent = self.ContentScroll
+    toggleContainer.Parent = parent
+    
+    -- Ícone
+    local iconLabel
+    if icon then
+        iconLabel = Instance.new("ImageLabel")
+        iconLabel.Name = "Icon"
+        iconLabel.Size = UDim2.new(0, 24, 0, 24)
+        iconLabel.Position = UDim2.new(0, 0, 0.5, -12)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Image = GetIcon(icon)
+        iconLabel.ImageColor3 = theme.Text
+        iconLabel.Parent = toggleContainer
+    end
     
     -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(0.7, 0, 1, 0)
-    textLabel.Position = UDim2.new(0, 0, 0, 0)
+    textLabel.Size = UDim2.new(0.7, icon and -40 or 0, 1, 0)
+    textLabel.Position = UDim2.new(0, icon and 40 or 0, 0, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = text
     textLabel.TextColor3 = theme.Text
@@ -1012,11 +735,18 @@ function BoladoHub:AddToggle(text, default, callback)
     -- Efeitos hover
     self:AddHoverEffect(toggleBtn)
     
-    -- Clique
+    -- Clique (Mouse)
     toggleBtn.MouseButton1Click:Connect(toggleState)
     
+    -- Clique (Touch)
+    if self.Config.TouchEnabled then
+        toggleBtn.TouchTap:Connect(toggleState)
+    end
+    
     table.insert(self.Components, toggleContainer)
+    
     return {
+        Instance = toggleContainer,
         State = function() return state end,
         Set = function(newState)
             if state ~= newState then
@@ -1024,6 +754,171 @@ function BoladoHub:AddToggle(text, default, callback)
             end
         end
     }
+end
+
+function BoladoHub:Slider(options)
+    local parent = options.Parent or self.ContentScroll
+    local text = options.Text or "Slider"
+    local min = options.Min or 0
+    local max = options.Max or 100
+    local default = options.Default or min
+    local callback = options.Callback or function() end
+    local suffix = options.Suffix or ""
+    
+    local theme = self:GetTheme()
+    
+    local sliderContainer = Instance.new("Frame")
+    sliderContainer.Name = "Sld_" .. text
+    sliderContainer.Size = UDim2.new(1, 0, 0, 65)
+    sliderContainer.BackgroundTransparency = 1
+    sliderContainer.Parent = parent
+    
+    -- Texto
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Name = "Label"
+    textLabel.Size = UDim2.new(1, 0, 0, 25)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = text .. ": " .. default .. suffix
+    textLabel.TextColor3 = theme.Text
+    textLabel.Font = Enum.Font.Gotham
+    textLabel.TextSize = 14
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.Parent = sliderContainer
+    
+    -- Barra
+    local track = Instance.new("Frame")
+    track.Name = "Track"
+    track.Size = UDim2.new(1, 0, 0, 6)
+    track.Position = UDim2.new(0, 0, 0, 35)
+    track.BackgroundColor3 = theme.Button
+    track.BorderSizePixel = 0
+    track.Parent = sliderContainer
+    
+    local trackCorner = Instance.new("UICorner")
+    trackCorner.CornerRadius = UDim.new(1, 0)
+    trackCorner.Parent = track
+    
+    -- Fill
+    local fillSize = (default - min) / (max - min)
+    local fill = Instance.new("Frame")
+    fill.Name = "Fill"
+    fill.Size = UDim2.new(fillSize, 0, 1, 0)
+    fill.BackgroundColor3 = theme.TabActive
+    fill.BorderSizePixel = 0
+    fill.Parent = track
+    
+    local fillCorner = Instance.new("UICorner")
+    fillCorner.CornerRadius = UDim.new(1, 0)
+    fillCorner.Parent = fill
+    
+    -- Handle
+    local handle = Instance.new("TextButton")
+    handle.Name = "Handle"
+    handle.Size = UDim2.new(0, 20, 0, 20)
+    handle.Position = UDim2.new(fillSize, -10, 0.5, -10)
+    handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    handle.AutoButtonColor = false
+    handle.Text = ""
+    handle.Parent = track
+    
+    local handleCorner = Instance.new("UICorner")
+    handleCorner.CornerRadius = UDim.new(1, 0)
+    handleCorner.Parent = handle
+    
+    -- Estado
+    local dragging = false
+    local value = default
+    
+    -- Atualizar valor
+    local function updateValue(newValue)
+        value = math.clamp(newValue, min, max)
+        local normalized = (value - min) / (max - min)
+        
+        fill.Size = UDim2.new(normalized, 0, 1, 0)
+        handle.Position = UDim2.new(normalized, -10, 0.5, -10)
+        textLabel.Text = text .. ": " .. math.floor(value) .. suffix
+        
+        if callback then
+            callback(value)
+        end
+    end
+    
+    -- Funções de input (Mouse + Touch)
+    local function onInputBegan(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1) or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch) then
+            dragging = true
+            
+            -- Feedback visual
+            TweenService:Create(handle, TweenInfo.new(0.1), {
+                Size = UDim2.new(0, 24, 0, 24)
+            }):Play()
+        end
+    end
+    
+    local function onInputEnded(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1) or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch) then
+            dragging = false
+            
+            TweenService:Create(handle, TweenInfo.new(0.1), {
+                Size = UDim2.new(0, 20, 0, 20)
+            }):Play()
+        end
+    end
+    
+    local function updateFromInput(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or
+           (self.Config.TouchEnabled and input.UserInputType == Enum.UserInputType.Touch)) then
+            local mousePos = input.Position
+            local trackAbsPos = track.AbsolutePosition
+            local trackAbsSize = track.AbsoluteSize
+            
+            local relativeX = math.clamp((mousePos.X - trackAbsPos.X) / trackAbsSize.X, 0, 1)
+            local newValue = min + (relativeX * (max - min))
+            
+            updateValue(newValue)
+        end
+    end
+    
+    -- Conectar eventos
+    handle.InputBegan:Connect(onInputBegan)
+    handle.InputEnded:Connect(onInputEnded)
+    track.InputBegan:Connect(onInputBegan)
+    track.InputEnded:Connect(onInputEnded)
+    
+    UserInputService.InputChanged:Connect(updateFromInput)
+    
+    table.insert(self.Components, sliderContainer)
+    
+    return {
+        Instance = sliderContainer,
+        Value = function() return value end,
+        Set = function(newValue) updateValue(newValue) end
+    }
+end
+
+function BoladoHub:Label(options)
+    local parent = options.Parent or self.ContentScroll
+    local text = options.Text or "Label"
+    local color = options.Color or self:GetTheme().Text
+    local size = options.Size or 14
+    local align = options.Align or Enum.TextXAlignment.Left
+    local bold = options.Bold or false
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Lbl_" .. text
+    label.Size = UDim2.new(1, 0, 0, 30)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = color
+    label.Font = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+    label.TextSize = size
+    label.TextXAlignment = align
+    label.TextWrapped = true
+    label.Parent = parent
+    
+    return label
 end
 
 -- ==================== FUNÇÕES AUXILIARES ====================
@@ -1051,18 +946,22 @@ end
 function BoladoHub:ToggleMinimize()
     if self.Minimized then
         -- Restaurar
-        TweenService:Create(self.MainFrame, TweenInfo.new(0.3), {
+        TweenService:Create(self.MainFrame, TweenInfo.new(self.Config.AnimationSpeed), {
             Size = self.Config.Size
         }):Play()
         self.Minimized = false
-        self.MinimizeBtn.Image = GetIcon("chevron-down")
+        if self.MinimizeBtn then
+            self.MinimizeBtn.Image = GetIcon("chevron-down")
+        end
     else
         -- Minimizar
-        TweenService:Create(self.MainFrame, TweenInfo.new(0.3), {
+        TweenService:Create(self.MainFrame, TweenInfo.new(self.Config.AnimationSpeed), {
             Size = UDim2.new(0, 300, 0, 40)
         }):Play()
         self.Minimized = true
-        self.MinimizeBtn.Image = GetIcon("chevron-up")
+        if self.MinimizeBtn then
+            self.MinimizeBtn.Image = GetIcon("chevron-up")
+        end
     end
 end
 
@@ -1094,6 +993,10 @@ function BoladoHub:UpdateTheme()
         border.Color = theme.Border
     end
     
+    if self.ContentScroll then
+        self.ContentScroll.ScrollBarImageColor3 = theme.TabActive
+    end
+    
     -- Atualizar abas
     for name, tab in pairs(self.Tabs) do
         if name == self.CurrentTab then
@@ -1109,21 +1012,26 @@ function BoladoHub:UpdateTheme()
     
     -- Atualizar componentes
     for _, component in ipairs(self.Components) do
-        if component:IsA("TextButton") and not component.Name:find("ToggleBtn") then
-            component.BackgroundColor3 = theme.Button
-            local border = component:FindFirstChildOfClass("UIStroke")
-            if border then
-                border.Color = theme.Border
-            end
-            
-            local icon = component:FindFirstChild("Icon")
-            if icon then
-                icon.ImageColor3 = theme.Text
-            end
-            
-            local label = component:FindFirstChild("Label")
-            if label then
-                label.TextColor3 = theme.Text
+        if component:IsA("TextButton") then
+            if component.Name:find("ToggleBtn") then
+                -- É um toggle
+            else
+                -- É um botão normal
+                component.BackgroundColor3 = theme.Button
+                local compBorder = component:FindFirstChildOfClass("UIStroke")
+                if compBorder then
+                    compBorder.Color = theme.Border
+                end
+                
+                local icon = component:FindFirstChild("Icon")
+                if icon then
+                    icon.ImageColor3 = theme.Text
+                end
+                
+                local label = component:FindFirstChild("Label")
+                if label then
+                    label.TextColor3 = theme.Text
+                end
             end
         end
     end
@@ -1151,36 +1059,49 @@ function BoladoHub:PlayEnterAnimation()
     self.MainFrame.Size = UDim2.new(0, 0, 0, 0)
     self.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
     
-    TweenService:Create(self.MainFrame, TweenInfo.new(0.6), {
+    TweenService:Create(self.MainFrame, TweenInfo.new(self.Config.AnimationSpeed, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
         Size = self.Config.Size,
         Position = self.Config.Position
     }):Play()
 end
 
 function BoladoHub:Destroy()
-    TweenService:Create(self.MainFrame, TweenInfo.new(0.3), {
+    TweenService:Create(self.MainFrame, TweenInfo.new(self.Config.AnimationSpeed), {
         Size = UDim2.new(0, 0, 0, 0),
-        Position = UDim2.new(0.5, 0, 0.5, 0)
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        BackgroundTransparency = 1
     }):Play()
     
-    task.wait(0.3)
+    task.wait(self.Config.AnimationSpeed)
     
     if self.ScreenGui then
         self.ScreenGui:Destroy()
     end
 end
 
--- Método para criar interface completa de exemplo
-function BoladoHub:CreateExample()
-    -- Adicionar abas
-    self:AddTab("Config", "settings")
-    self:AddTab("Principal", "home")
-    self:AddTab("Visuals", "eye")
-    
-    print("BoladoHub criado com sucesso!")
-    print("Use Insert para mostrar/esconder")
-    print("Use Delete para fechar")
-    print("Use RightShift para minimizar")
+-- Métodos utilitários
+function BoladoHub:GetCurrentTab()
+    return self.CurrentTab
+end
+
+function BoladoHub:GetAvailableThemes()
+    local themeNames = {}
+    for name, _ in pairs(Themes) do
+        table.insert(themeNames, name)
+    end
+    return themeNames
+end
+
+function BoladoHub:Show()
+    self.ScreenGui.Enabled = true
+end
+
+function BoladoHub:Hide()
+    self.ScreenGui.Enabled = false
+end
+
+function BoladoHub:IsVisible()
+    return self.ScreenGui.Enabled
 end
 
 return BoladoHub
