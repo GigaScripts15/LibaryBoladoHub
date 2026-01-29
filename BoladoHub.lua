@@ -1,4 +1,4 @@
--- BoladoHub Library v2.0 - Compact Version
+-- BoladoHub Library v2.0
 -- Biblioteca completa com suporte a ícones
 
 local BoladoHub = {}
@@ -52,23 +52,21 @@ BoladoHub.__index = BoladoHub
 function BoladoHub.new(options)
     local self = setmetatable({}, BoladoHub)
 
-    -- Configurações com tamanhos reduzidos
+    -- Configurações
     self.Config = {
         Name = options.Name or "BoladoHub",
-        Size = options.Size or UDim2.new(0, 450, 0, 400), -- Tamanho reduzido
+        Size = options.Size or UDim2.new(0, 300, 0, 300),
         Theme = options.Theme or "Dark",
         ShowMinimize = options.ShowMinimize ~= false,
         ShowClose = options.ShowClose ~= false,
         Draggable = options.Draggable ~= false,
-        AutoPosition = options.AutoPosition ~= false,
-        CompactMode = options.CompactMode or true -- Novo: modo compacto
+        AutoPosition = options.AutoPosition ~= false
     }
 
     self.Elements = {}
     self.Tabs = {}
     self.Components = {}
     self.ActiveTab = nil
-    self.CompactMode = self.Config.CompactMode
 
     -- Criar interface
     self:CreateUI()
@@ -89,34 +87,28 @@ function BoladoHub:CreateUI()
     -- Frame principal
     self.MainFrame = Instance.new("Frame")
     self.MainFrame.Name = "MainFrame"
-    
-    -- Ajustar tamanho baseado no modo
-    if self.CompactMode then
-        self.MainFrame.Size = UDim2.new(0, 380, 0, 350) -- Tamanho compacto
-    else
-        self.MainFrame.Size = self.Config.Size
-    end
+    self.MainFrame.Size = self.Config.Size
 
     if self.Config.AutoPosition then
-        self.MainFrame.Position = UDim2.new(0.5, -self.MainFrame.Size.X.Offset/2, 0.5, -self.MainFrame.Size.Y.Offset/2)
+        self.MainFrame.Position = UDim2.new(0.5, -self.Config.Size.X.Offset/2, 0.5, -self.Config.Size.Y.Offset/2)
     else
-        self.MainFrame.Position = UDim2.new(0.1, 0, 0.1, 0) -- Posição mais para o canto
+        self.MainFrame.Position = UDim2.new(0.05, 0, 0.05, 0)
     end
 
     self.MainFrame.BackgroundColor3 = self:GetColor("Background")
     self.MainFrame.BorderSizePixel = 0
     self.MainFrame.Parent = self.ScreenGui
 
-    -- Corner menor para ficar mais compacto
+    -- Corner
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 8) -- Reduzido de 12 para 8
+    corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = self.MainFrame
 
-    -- Shadow mais sutil
+    -- Shadow
     local shadow = Instance.new("ImageLabel")
     shadow.Name = "Shadow"
-    shadow.Size = UDim2.new(1, 6, 1, 6) -- Reduzido
-    shadow.Position = UDim2.new(0, -3, 0, -3) -- Reduzido
+    shadow.Size = UDim2.new(1, 10, 1, 10)
+    shadow.Position = UDim2.new(0, -5, 0, -5)
     shadow.Image = "rbxassetid://5554236805"
     shadow.ImageColor3 = Color3.new(0, 0, 0)
     shadow.ImageTransparency = 0.8
@@ -141,36 +133,36 @@ function BoladoHub:CreateTitleBar()
 
     self.TitleBar = Instance.new("Frame")
     self.TitleBar.Name = "TitleBar"
-    self.TitleBar.Size = UDim2.new(1, 0, 0, 32) -- Reduzido de 40 para 32
+    self.TitleBar.Size = UDim2.new(1, 0, 0, 40)
     self.TitleBar.BackgroundColor3 = theme.Accent
     self.TitleBar.BorderSizePixel = 0
     self.TitleBar.Parent = self.MainFrame
 
     -- Corner apenas no topo
     local titleCorner = Instance.new("UICorner")
-    titleCorner.CornerRadius = UDim.new(0, 8, 0, 0) -- Reduzido
+    titleCorner.CornerRadius = UDim.new(0, 12, 0, 0)
     titleCorner.Parent = self.TitleBar
 
-    -- Ícone do título menor
+    -- Ícone do título
     local titleIcon = Instance.new("ImageLabel")
     titleIcon.Name = "TitleIcon"
-    titleIcon.Size = UDim2.new(0, 20, 0, 20) -- Reduzido
-    titleIcon.Position = UDim2.new(0, 8, 0.5, -10) -- Ajustado
+    titleIcon.Size = UDim2.new(0, 24, 0, 24)
+    titleIcon.Position = UDim2.new(0, 10, 0.5, -12)
     titleIcon.BackgroundTransparency = 1
     titleIcon.Image = Icons:Get("bolt")
     titleIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
     titleIcon.Parent = self.TitleBar
 
-    -- Título com fonte menor
+    -- Título
     self.TitleLabel = Instance.new("TextLabel")
     self.TitleLabel.Name = "TitleLabel"
-    self.TitleLabel.Size = UDim2.new(1, -100, 1, 0) -- Ajustado
-    self.TitleLabel.Position = UDim2.new(0, 32, 0, 0) -- Ajustado
+    self.TitleLabel.Size = UDim2.new(1, -120, 1, 0)
+    self.TitleLabel.Position = UDim2.new(0, 40, 0, 0)
     self.TitleLabel.BackgroundTransparency = 1
     self.TitleLabel.Text = "  " .. self.Config.Name
     self.TitleLabel.TextColor3 = theme.Text
     self.TitleLabel.Font = Enum.Font.GothamBold
-    self.TitleLabel.TextSize = 14 -- Reduzido de 16 para 14
+    self.TitleLabel.TextSize = 16
     self.TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.TitleLabel.Parent = self.TitleBar
 
@@ -184,15 +176,15 @@ function BoladoHub:CreateTitleBar()
 end
 
 function BoladoHub:CreateTitleButtons()
-    local buttonSize = UDim2.new(0, 26, 0, 26) -- Reduzido
-    local buttonSpacing = 4 -- Reduzido
+    local buttonSize = UDim2.new(0, 30, 0, 30)
+    local buttonSpacing = 5
 
     -- Botão minimizar
     if self.Config.ShowMinimize then
         self.MinimizeBtn = Instance.new("ImageButton")
         self.MinimizeBtn.Name = "MinimizeBtn"
         self.MinimizeBtn.Size = buttonSize
-        self.MinimizeBtn.Position = UDim2.new(1, -60, 0.5, -13) -- Ajustado
+        self.MinimizeBtn.Position = UDim2.new(1, -70, 0.5, -15)
         self.MinimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         self.MinimizeBtn.BackgroundTransparency = 0.9
         self.MinimizeBtn.Image = Icons:Get("chevron-down")
@@ -200,7 +192,7 @@ function BoladoHub:CreateTitleButtons()
         self.MinimizeBtn.Parent = self.TitleBar
 
         local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 5) -- Reduzido
+        corner.CornerRadius = UDim.new(0, 6)
         corner.Parent = self.MinimizeBtn
 
         -- Efeitos
@@ -217,14 +209,14 @@ function BoladoHub:CreateTitleButtons()
         self.CloseBtn = Instance.new("ImageButton")
         self.CloseBtn.Name = "CloseBtn"
         self.CloseBtn.Size = buttonSize
-        self.CloseBtn.Position = UDim2.new(1, -30, 0.5, -13) -- Ajustado
+        self.CloseBtn.Position = UDim2.new(1, -35, 0.5, -15)
         self.CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 85, 85)
         self.CloseBtn.Image = Icons:Get("xcircle")
         self.CloseBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
         self.CloseBtn.Parent = self.TitleBar
 
         local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 5) -- Reduzido
+        corner.CornerRadius = UDim.new(0, 6)
         corner.Parent = self.CloseBtn
 
         -- Efeitos
@@ -240,20 +232,20 @@ end
 function BoladoHub:CreateTabSystem()
     local theme = self:GetTheme()
 
-    -- Frame das abas mais estreito
+    -- Frame das abas
     self.TabsFrame = Instance.new("Frame")
     self.TabsFrame.Name = "TabsFrame"
-    self.TabsFrame.Size = UDim2.new(0, 130, 1, -32) -- Reduzido largura e altura
-    self.TabsFrame.Position = UDim2.new(0, 0, 0, 32) -- Ajustado
+    self.TabsFrame.Size = UDim2.new(0, 160, 1, -40)
+    self.TabsFrame.Position = UDim2.new(0, 0, 0, 40)
     self.TabsFrame.BackgroundColor3 = theme.Secondary
     self.TabsFrame.BorderSizePixel = 0
     self.TabsFrame.Parent = self.MainFrame
 
-    -- Frame de conteúdo maior
+    -- Frame de conteúdo
     self.ContentFrame = Instance.new("Frame")
     self.ContentFrame.Name = "ContentFrame"
-    self.ContentFrame.Size = UDim2.new(1, -130, 1, -32) -- Ajustado
-    self.ContentFrame.Position = UDim2.new(0, 130, 0, 32) -- Ajustado
+    self.ContentFrame.Size = UDim2.new(1, -160, 1, -40)
+    self.ContentFrame.Position = UDim2.new(0, 160, 0, 40)
     self.ContentFrame.BackgroundColor3 = theme.Background
     self.ContentFrame.BorderSizePixel = 0
     self.ContentFrame.Parent = self.MainFrame
@@ -264,18 +256,18 @@ function BoladoHub:CreateTabSystem()
     tabsScroll.Size = UDim2.new(1, 0, 1, 0)
     tabsScroll.BackgroundTransparency = 1
     tabsScroll.BorderSizePixel = 0
-    tabsScroll.ScrollBarThickness = 2 -- Reduzido
+    tabsScroll.ScrollBarThickness = 3
     tabsScroll.ScrollBarImageColor3 = theme.Accent
     tabsScroll.Parent = self.TabsFrame
 
     local tabsList = Instance.new("UIListLayout")
-    tabsList.Padding = UDim.new(0, 4) -- Reduzido
+    tabsList.Padding = UDim.new(0, 5)
     tabsList.Parent = tabsScroll
 
     local tabsPadding = Instance.new("UIPadding")
-    tabsPadding.PaddingTop = UDim.new(0, 8) -- Reduzido
-    tabsPadding.PaddingLeft = UDim.new(0, 8) -- Reduzido
-    tabsPadding.PaddingRight = UDim.new(0, 8) -- Reduzido
+    tabsPadding.PaddingTop = UDim.new(0, 10)
+    tabsPadding.PaddingLeft = UDim.new(0, 10)
+    tabsPadding.PaddingRight = UDim.new(0, 10)
     tabsPadding.Parent = tabsScroll
 
     self.TabsScroll = tabsScroll
@@ -284,43 +276,43 @@ end
 function BoladoHub:AddTab(name, icon)
     local theme = self:GetTheme()
 
-    -- Botão da aba menor
+    -- Botão da aba
     local tabButton = Instance.new("TextButton")
     tabButton.Name = name .. "Tab"
-    tabButton.Size = UDim2.new(1, 0, 0, 38) -- Reduzido
+    tabButton.Size = UDim2.new(1, 0, 0, 45)
     tabButton.BackgroundColor3 = theme.Button
     tabButton.BorderSizePixel = 0
     tabButton.Text = ""
     tabButton.AutoButtonColor = false
     tabButton.Parent = self.TabsScroll
 
-    -- Corner menor
+    -- Corner
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6) -- Reduzido
+    corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = tabButton
 
-    -- Ícone menor
+    -- Ícone
     if icon then
         local iconImage = Instance.new("ImageLabel")
         iconImage.Name = "Icon"
-        iconImage.Size = UDim2.new(0, 20, 0, 20) -- Reduzido
-        iconImage.Position = UDim2.new(0, 10, 0.5, -10) -- Ajustado
+        iconImage.Size = UDim2.new(0, 24, 0, 24)
+        iconImage.Position = UDim2.new(0, 15, 0.5, -12)
         iconImage.BackgroundTransparency = 1
         iconImage.Image = Icons:Get(icon)
         iconImage.ImageColor3 = theme.TextSecondary
         iconImage.Parent = tabButton
     end
 
-    -- Texto menor
+    -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(1, -40, 1, 0) -- Ajustado
-    textLabel.Position = UDim2.new(0, 35, 0, 0) -- Ajustado
+    textLabel.Size = UDim2.new(1, -50, 1, 0)
+    textLabel.Position = UDim2.new(0, 45, 0, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = name
     textLabel.TextColor3 = theme.TextSecondary
     textLabel.Font = Enum.Font.Gotham
-    textLabel.TextSize = 12 -- Reduzido
+    textLabel.TextSize = 14
     textLabel.TextXAlignment = Enum.TextXAlignment.Left
     textLabel.Parent = tabButton
 
@@ -330,21 +322,21 @@ function BoladoHub:AddTab(name, icon)
     contentFrame.Size = UDim2.new(1, 0, 1, 0)
     contentFrame.BackgroundTransparency = 1
     contentFrame.BorderSizePixel = 0
-    contentFrame.ScrollBarThickness = 4 -- Reduzido
+    contentFrame.ScrollBarThickness = 5
     contentFrame.ScrollBarImageColor3 = theme.Accent
     contentFrame.Visible = false
     contentFrame.Parent = self.ContentFrame
 
     -- List layout
     local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 8) -- Reduzido
+    listLayout.Padding = UDim.new(0, 12)
     listLayout.Parent = contentFrame
 
-    -- Padding menor
+    -- Padding
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.new(0, 12) -- Reduzido
-    padding.PaddingLeft = UDim.new(0, 12) -- Reduzido
-    padding.PaddingRight = UDim.new(0, 12) -- Reduzido
+    padding.PaddingTop = UDim.new(0, 15)
+    padding.PaddingLeft = UDim.new(0, 15)
+    padding.PaddingRight = UDim.new(0, 15)
     padding.Parent = contentFrame
 
     -- Efeito hover
@@ -432,7 +424,7 @@ function BoladoHub:SelectTab(name)
     end
 end
 
--- Componentes com tamanhos reduzidos
+-- Componentes
 function BoladoHub:Button(options)
     local parent = options.Parent or self.Tabs[self.ActiveTab].Content
     local text = options.Text or "Button"
@@ -440,43 +432,43 @@ function BoladoHub:Button(options)
     local callback = options.Callback or function() end
     local color = options.Color or self:GetColor("Button")
 
-    -- Container menor
+    -- Container
     local buttonContainer = Instance.new("TextButton")
     buttonContainer.Name = text .. "Button"
-    buttonContainer.Size = UDim2.new(1, 0, 0, 42) -- Reduzido
+    buttonContainer.Size = UDim2.new(1, 0, 0, 50)
     buttonContainer.BackgroundColor3 = color
     buttonContainer.AutoButtonColor = false
     buttonContainer.Text = ""
     buttonContainer.Parent = parent
 
-    -- Corner menor
+    -- Corner
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 8) -- Reduzido
+    corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = buttonContainer
 
-    -- Ícone menor
+    -- Ícone
     local iconLabel
     if icon then
         iconLabel = Instance.new("ImageLabel")
         iconLabel.Name = "Icon"
-        iconLabel.Size = UDim2.new(0, 24, 0, 24) -- Reduzido
-        iconLabel.Position = UDim2.new(0, 12, 0.5, -12) -- Ajustado
+        iconLabel.Size = UDim2.new(0, 28, 0, 28)
+        iconLabel.Position = UDim2.new(0, 15, 0.5, -14)
         iconLabel.BackgroundTransparency = 1
         iconLabel.Image = Icons:Get(icon)
         iconLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
         iconLabel.Parent = buttonContainer
     end
 
-    -- Texto menor
+    -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(1, icon and -50 or -25, 1, 0) -- Ajustado
-    textLabel.Position = UDim2.new(0, icon and 45 or 12, 0, 0) -- Ajustado
+    textLabel.Size = UDim2.new(1, icon and -60 or -30, 1, 0)
+    textLabel.Position = UDim2.new(0, icon and 55 or 15, 0, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = text
     textLabel.TextColor3 = self:GetColor("Text")
     textLabel.Font = Enum.Font.GothamSemibold
-    textLabel.TextSize = 14 -- Reduzido
+    textLabel.TextSize = 15
     textLabel.TextXAlignment = Enum.TextXAlignment.Left
     textLabel.Parent = buttonContainer
 
@@ -487,13 +479,13 @@ function BoladoHub:Button(options)
     buttonContainer.MouseButton1Click:Connect(function()
         -- Animação de clique
         TweenService:Create(buttonContainer, TweenInfo.new(0.1), {
-            Size = UDim2.new(1, -5, 0, 38) -- Ajustado
+            Size = UDim2.new(1, -10, 0, 45)
         }):Play()
 
         task.wait(0.1)
 
         TweenService:Create(buttonContainer, TweenInfo.new(0.1), {
-            Size = UDim2.new(1, 0, 0, 42) -- Ajustado
+            Size = UDim2.new(1, 0, 0, 50)
         }):Play()
 
         -- Executar callback
@@ -510,44 +502,44 @@ function BoladoHub:Toggle(options)
     local default = options.Default or false
     local callback = options.Callback or function() end
 
-    -- Container menor
+    -- Container
     local toggleContainer = Instance.new("Frame")
     toggleContainer.Name = text .. "Toggle"
-    toggleContainer.Size = UDim2.new(1, 0, 0, 42) -- Reduzido
+    toggleContainer.Size = UDim2.new(1, 0, 0, 50)
     toggleContainer.BackgroundTransparency = 1
     toggleContainer.Parent = parent
 
-    -- Ícone menor
+    -- Ícone
     local iconLabel
     if icon then
         iconLabel = Instance.new("ImageLabel")
         iconLabel.Name = "Icon"
-        iconLabel.Size = UDim2.new(0, 20, 0, 20) -- Reduzido
-        iconLabel.Position = UDim2.new(0, 0, 0.5, -10) -- Ajustado
+        iconLabel.Size = UDim2.new(0, 24, 0, 24)
+        iconLabel.Position = UDim2.new(0, 0, 0.5, -12)
         iconLabel.BackgroundTransparency = 1
         iconLabel.Image = Icons:Get(icon)
         iconLabel.ImageColor3 = self:GetColor("Text")
         iconLabel.Parent = toggleContainer
     end
 
-    -- Texto menor
+    -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(0.7, icon and -30 or 0, 1, 0) -- Ajustado
-    textLabel.Position = UDim2.new(0, icon and 25 or 0, 0, 0) -- Ajustado
+    textLabel.Size = UDim2.new(0.7, icon and -40 or 0, 1, 0)
+    textLabel.Position = UDim2.new(0, icon and 35 or 0, 0, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = text
     textLabel.TextColor3 = self:GetColor("Text")
     textLabel.Font = Enum.Font.Gotham
-    textLabel.TextSize = 13 -- Reduzido
+    textLabel.TextSize = 14
     textLabel.TextXAlignment = Enum.TextXAlignment.Left
     textLabel.Parent = toggleContainer
 
-    -- Botão toggle menor
+    -- Botão toggle
     local toggleBtn = Instance.new("TextButton")
     toggleBtn.Name = "ToggleBtn"
-    toggleBtn.Size = UDim2.new(0, 52, 0, 26) -- Reduzido
-    toggleBtn.Position = UDim2.new(1, -52, 0.5, -13) -- Ajustado
+    toggleBtn.Size = UDim2.new(0, 60, 0, 30)
+    toggleBtn.Position = UDim2.new(1, -60, 0.5, -15)
     toggleBtn.BackgroundColor3 = default and self:GetColor("ToggleOn") or self:GetColor("ToggleOff")
     toggleBtn.AutoButtonColor = false
     toggleBtn.Text = ""
@@ -557,11 +549,11 @@ function BoladoHub:Toggle(options)
     btnCorner.CornerRadius = UDim.new(1, 0)
     btnCorner.Parent = toggleBtn
 
-    -- Indicador menor
+    -- Indicador
     local indicator = Instance.new("Frame")
     indicator.Name = "Indicator"
-    indicator.Size = UDim2.new(0, 20, 0, 20) -- Reduzido
-    indicator.Position = default and UDim2.new(1, -21, 0.5, -10) or UDim2.new(0, 1, 0.5, -10) -- Ajustado
+    indicator.Size = UDim2.new(0, 24, 0, 24)
+    indicator.Position = default and UDim2.new(1, -25, 0.5, -12) or UDim2.new(0, 1, 0.5, -12)
     indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     indicator.Parent = toggleBtn
 
@@ -582,7 +574,7 @@ function BoladoHub:Toggle(options)
             }):Play()
 
             TweenService:Create(indicator, TweenInfo.new(0.2), {
-                Position = UDim2.new(1, -21, 0.5, -10)
+                Position = UDim2.new(1, -25, 0.5, -12)
             }):Play()
         else
             TweenService:Create(toggleBtn, TweenInfo.new(0.2), {
@@ -590,7 +582,7 @@ function BoladoHub:Toggle(options)
             }):Play()
 
             TweenService:Create(indicator, TweenInfo.new(0.2), {
-                Position = UDim2.new(0, 1, 0.5, -10)
+                Position = UDim2.new(0, 1, 0.5, -12)
             }):Play()
         end
 
@@ -620,30 +612,30 @@ function BoladoHub:Slider(options)
     local callback = options.Callback or function() end
     local decimal = options.Decimal or 0
 
-    -- Container menor
+    -- Container
     local sliderContainer = Instance.new("Frame")
     sliderContainer.Name = text .. "Slider"
-    sliderContainer.Size = UDim2.new(1, 0, 0, 60) -- Reduzido
+    sliderContainer.Size = UDim2.new(1, 0, 0, 70)
     sliderContainer.BackgroundTransparency = 1
     sliderContainer.Parent = parent
 
-    -- Texto menor
+    -- Texto
     local textLabel = Instance.new("TextLabel")
     textLabel.Name = "Label"
-    textLabel.Size = UDim2.new(1, 0, 0, 20) -- Reduzido
+    textLabel.Size = UDim2.new(1, 0, 0, 25)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = text .. ": " .. string.format("%." .. decimal .. "f", default)
     textLabel.TextColor3 = self:GetColor("Text")
     textLabel.Font = Enum.Font.Gotham
-    textLabel.TextSize = 13 -- Reduzido
+    textLabel.TextSize = 14
     textLabel.TextXAlignment = Enum.TextXAlignment.Left
     textLabel.Parent = sliderContainer
 
-    -- Barra do slider mais fina
+    -- Barra do slider
     local sliderTrack = Instance.new("Frame")
     sliderTrack.Name = "Track"
-    sliderTrack.Size = UDim2.new(1, 0, 0, 5) -- Reduzido
-    sliderTrack.Position = UDim2.new(0, 0, 0, 30) -- Ajustado
+    sliderTrack.Size = UDim2.new(1, 0, 0, 6)
+    sliderTrack.Position = UDim2.new(0, 0, 0, 35)
     sliderTrack.BackgroundColor3 = self:GetColor("Button")
     sliderTrack.BorderSizePixel = 0
     sliderTrack.Parent = sliderContainer
@@ -665,11 +657,11 @@ function BoladoHub:Slider(options)
     fillCorner.CornerRadius = UDim.new(1, 0)
     fillCorner.Parent = sliderFill
 
-    -- Handle menor
+    -- Handle
     local sliderHandle = Instance.new("TextButton")
     sliderHandle.Name = "Handle"
-    sliderHandle.Size = UDim2.new(0, 18, 0, 18) -- Reduzido
-    sliderHandle.Position = UDim2.new(fillSize, -9, 0.5, -9) -- Ajustado
+    sliderHandle.Size = UDim2.new(0, 20, 0, 20)
+    sliderHandle.Position = UDim2.new(fillSize, -10, 0.5, -10)
     sliderHandle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     sliderHandle.AutoButtonColor = false
     sliderHandle.Text = ""
@@ -693,7 +685,7 @@ function BoladoHub:Slider(options)
         }):Play()
 
         TweenService:Create(sliderHandle, TweenInfo.new(0.1), {
-            Position = UDim2.new(normalized, -9, 0.5, -9)
+            Position = UDim2.new(normalized, -10, 0.5, -10)
         }):Play()
 
         textLabel.Text = text .. ": " .. string.format("%." .. decimal .. "f", value)
@@ -751,12 +743,12 @@ function BoladoHub:Label(options)
     local parent = options.Parent or self.Tabs[self.ActiveTab].Content
     local text = options.Text or "Label"
     local color = options.Color or self:GetColor("Text")
-    local size = options.Size or 13 -- Reduzido padrão
+    local size = options.Size or 14
     local align = options.Align or Enum.TextXAlignment.Left
 
     local label = Instance.new("TextLabel")
     label.Name = "Label"
-    label.Size = UDim2.new(1, 0, 0, 25) -- Reduzido
+    label.Size = UDim2.new(1, 0, 0, 30)
     label.BackgroundTransparency = 1
     label.Text = text
     label.TextColor3 = color
@@ -840,20 +832,20 @@ function BoladoHub:AddEffects()
     self.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 
     TweenService:Create(self.MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Size = self.MainFrame.Size,
-        Position = UDim2.new(0.5, -self.MainFrame.Size.X.Offset/2, 0.5, -self.MainFrame.Size.Y.Offset/2)
+        Size = self.Config.Size,
+        Position = UDim2.new(0.5, -self.Config.Size.X.Offset/2, 0.5, -self.Config.Size.Y.Offset/2)
     }):Play()
 end
 
 function BoladoHub:ToggleMinimize()
     if self.Minimized then
         TweenService:Create(self.MainFrame, TweenInfo.new(0.3), {
-            Size = self.MainFrame.Size
+            Size = self.Config.Size
         }):Play()
         self.Minimized = false
     else
         TweenService:Create(self.MainFrame, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 40, 0, 40) -- Mais compacto
+            Size = UDim2.new(self.Config.Size.X, UDim2.new(0, 40, 0, 40))
         }):Play()
         self.Minimized = true
     end
@@ -903,14 +895,6 @@ function BoladoHub:Destroy()
     if self.ScreenGui then
         self.ScreenGui:Destroy()
     end
-end
-
--- Função auxiliar para criar UI compacta
-function BoladoHub.CreateCompactUI(options)
-    options = options or {}
-    options.CompactMode = true
-    options.Size = UDim2.new(0, 380, 0, 350)
-    return BoladoHub.new(options)
 end
 
 return BoladoHub
