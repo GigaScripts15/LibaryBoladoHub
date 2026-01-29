@@ -896,5 +896,5 @@ function BoladoHub:Destroy()
         self.ScreenGui:Destroy()
     end
 end
-
+e
 return BoladoHub
