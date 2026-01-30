@@ -16,7 +16,6 @@ AxiomX.Version = "1.0.0"
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
 
 if not RunService:IsClient() then
     warn("[AxiomX] Esta library deve ser executada no Cliente")
@@ -120,6 +119,7 @@ local function CreateFrame(parent, name, props)
     frame.BorderSizePixel = 0
     frame.Size = props.Size or UDim2.new(1, 0, 1, 0)
     frame.Position = props.Position or UDim2.new(0, 0, 0, 0)
+    frame.ClipsDescendants = props.ClipsDescendants or false
     
     if props.CornerRadius then
         local corner = Instance.new("UICorner")
@@ -198,7 +198,6 @@ function AxiomX:CreateWindow(windowSettings)
     
     self.Title = windowSettings.Title or "AxiomX"
     self.Size = windowSettings.Size or UDim2.new(0, 600, 0, 500)
-    self.Transparent = windowSettings.Transparent or false
     self.Theme = windowSettings.Theme or "Dark"
     self.ThemeObject = Themes[self.Theme] or Themes.Dark
     
@@ -357,7 +356,6 @@ function Window:CreateTab(tabName)
     tab.__index = tab
     setmetatable(tab, {__index = function(_, k) return Window[k] end})
     
-    -- Tab Button
     local tabButton = CreateButton(self.Sidebar, tabName, {
         TextColor3 = self.ThemeObject.TextColor,
         TextSize = 12,
@@ -365,7 +363,6 @@ function Window:CreateTab(tabName)
         Size = UDim2.new(1, 0, 0, 35),
     })
     
-    -- Tab Content
     local tabContent = CreateFrame(self.ScrollFrame, tabName .. "Content", {
         BackgroundColor3 = self.ThemeObject.Background,
         BackgroundTransparency = 1,
@@ -643,9 +640,8 @@ function Window:CreateDropdown(args)
         Size = UDim2.new(1, 0, 0, 0),
         Position = UDim2.new(0, 0, 0, 43),
         CornerRadius = 6,
+        ClipsDescendants = true,
     })
-    
-    dropdownMenu.ClipsDescendants = true
     
     local optionsLayout = Instance.new("UIListLayout")
     optionsLayout.Padding = UDim.new(0, 5)
@@ -788,3 +784,4 @@ end
 
 print("[AxiomX] Library carregada com sucesso! v" .. AxiomX.Version)
 return AxiomX
+
