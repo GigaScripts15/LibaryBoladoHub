@@ -1,5 +1,5 @@
 -- BoladoHub Completo v3.0
-local BoladoHub = loadstring(game:HttpGet("URL_DA_BIBLIOTECA"))()
+local BoladoHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/GigaScripts15/LibaryBoladoHub/refs/heads/main/BoladoHub.lua"))()
 
 -- Criar interface
 local hub = BoladoHub.new({
